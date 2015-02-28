@@ -78,6 +78,8 @@ int main() {
 				{
 					ball[i].active = true;
 
+
+					//マウスの位置に弾が出るようにできない下の書き方だとできない
 					//ball[i].x = env.mousePosition.x();
 					//ball[i].y = env.mousePosition.y();
 
