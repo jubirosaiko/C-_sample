@@ -5,7 +5,7 @@
 #include "lib/defines.hpp"
 #include "lib/appEnv.hpp"
 #include "lib/random.hpp"
-#include "lib/random.hpp"
+#include "time.h"
 
 enum Window {
 	WIDTH = 512,
@@ -50,7 +50,7 @@ void Init()
 int main() {
 	AppEnv env(Window::WIDTH, Window::HEIGHT, false, false);
 
-
+	random.setSeed(u_int(time(nullptr)));
 	Init();
 	
 
