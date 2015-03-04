@@ -44,6 +44,8 @@ void Init()
 		ball[i].size_x = 10;
 		ball[i].size_y = 10;
 		ball[i].r = 10;
+		ball[i].speed_x = 0;
+		ball[i].speed_y = 0;
 		bool active = false;
 	}
 }
@@ -157,7 +159,7 @@ int main() {
 		}
 
 		Ball_create(env);
-		
+
 
 		Ball_move(env);
 
