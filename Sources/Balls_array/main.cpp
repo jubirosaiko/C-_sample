@@ -51,6 +51,89 @@ void Init()
 //重力
 const float gravity = -1.0;
 
+
+//弾を作る
+void Ball_create(AppEnv &env)
+{
+	for (int i = 0; i < BALL_MAX; ++i)
+	{
+		//クリックしたら
+		if (isMouse_click)
+		{
+
+			if (!ball[i].active)
+			{
+				ball[i].active = true;
+
+				ball[i].x = env.mousePosition().x();
+				ball[i].y = env.mousePosition().y();
+
+				ball[i].speed_x = random.fromFirstToLast(-3.0f, 3.0f);
+				ball[i].speed_y = random.fromFirstToLast(-4.0f, 4.0f);
+
+				ball[i].color = Color(random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f));
+
+				isMouse_click = false;
+			}
+		}
+	}
+}
+
+//当たり判定と重力かけるやつ
+void Ball_move(AppEnv &env)
+{
+
+	//弾の動き
+	for (int i = 0; i < BALL_MAX; ++i)
+	{
+		ball[i].x += ball[i].speed_x;
+		ball[i].y += ball[i].speed_y;
+
+
+		if (ball[i].x >= WIDTH / 2)
+		{
+			ball[i].x = WIDTH / 2 - ball[i].size_x;
+			ball[i].speed_x *= -1;
+		}
+
+		if (ball[i].x <= -WIDTH / 2)
+		{
+			ball[i].speed_x *= -1;
+		}
+
+		if (ball[i].y >= HEIGHT / 2)
+		{
+			ball[i].y = HEIGHT / 2 - ball[i].size_y;
+			ball[i].speed_y *= -1;
+		}
+
+		if (ball[i].y <= -HEIGHT / 2)
+		{
+			ball[i].y = -HEIGHT / 2;
+			ball[i].speed_y *= -1;
+		}
+		//押したら重力をかける
+		if (env.isPressKey('G'))
+		{
+			ball[i].speed_y += gravity;
+		}
+	}
+
+}
+
+//弾を表示
+void Draw_ball()
+{
+	//描画
+	for (int i = 0; i < BALL_MAX; ++i)
+	{
+		if (ball[i].active)
+		{
+			drawFillCircle(ball[i].x, ball[i].y, ball[i].size_x, ball[i].size_y, 100, ball[i].color);
+		}
+	}
+}
+
 // 
 // メインプログラム
 // 
@@ -73,77 +156,14 @@ int main() {
 			isMouse_click = true;
 		}
 
-
-		for (int i = 0; i < BALL_MAX; ++i)
-		{
-			//クリックしたら
-			if (isMouse_click)
-			{
-
-				if (!ball[i].active)
-				{
-					ball[i].active = true;
-
-					ball[i].x = env.mousePosition().x();
-					ball[i].y = env.mousePosition().y();
-
-					ball[i].speed_x = random.fromFirstToLast(1.0f, 3.0f);
-					ball[i].speed_y = random.fromFirstToLast(2.0f, 3.0f);
-
-					ball[i].color = Color(random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f));
-
-					isMouse_click = false;
-				}
-			}
-		}
-
-		//弾の動き
-		for (int i = 0; i < BALL_MAX; ++i)
-		{
-			ball[i].x += ball[i].speed_x;
-			ball[i].y += ball[i].speed_y;
-
+		Ball_create(env);
 		
-			if (ball[i].x >= WIDTH / 2)
-			{
-				ball[i].x = WIDTH / 2 - ball[i].size_x;
-				ball[i].speed_x *= -1;
-			}
-			
-			if (ball[i].x <= -WIDTH / 2)
-			{
-				ball[i].speed_x *= -1;
-			}
 
-			if (ball[i].y >= HEIGHT / 2)
-			{
-				ball[i].y = HEIGHT / 2 - ball[i].size_y;
-				ball[i].speed_y *= -1;
-			}
-
-			if (ball[i].y <= -HEIGHT / 2)
-			{
-				ball[i].y = -HEIGHT / 2;
-				ball[i].speed_y *= -1;
-			}
-			//押したら重力をかける
-			if (env.isPressKey('G'))
-			{
-				ball[i].speed_y += gravity;	
-			}		
-		}
-
+		Ball_move(env);
 
 		env.setupDraw();
 
-		//描画→クリック判定と配列を見る
-		for (int i = 0; i < BALL_MAX; ++i)
-		{
-			if (ball[i].active)
-			{
-				drawFillCircle(ball[i].x, ball[i].y, ball[i].size_x, ball[i].size_y, 100, ball[i].color);
-			}
-		}
+		Draw_ball();
 
 		env.update();
 	}
