@@ -72,7 +72,8 @@ int main() {
 		if (env.isPushKey('2'))
 		{
 			index = 1;
-		}if (env.isPushKey('3'))
+		}
+		if (env.isPushKey('3'))
 		{
 			index = 2;
 		}
